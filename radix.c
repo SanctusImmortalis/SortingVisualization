@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include <pthread.h>
 #include <semaphore.h>
@@ -187,27 +188,40 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height){
 
 void* sort(void* arg){
   int* arr = (int*) arg;
-
-  int max = NUM - 1;
-
-  int swaps = 1;
-  while(swaps){
-    swaps = 0;
-    for(int i=0;i<max;i++){
-      sem_wait(&s1);
-      if(arr[i]>arr[i+1]){
-
-        int aux = arr[i];
-        arr[i] = arr[i+1];
-        arr[i+1] = aux;
-
-        swaps++;
-      }
-      sem_post(&s2);
-      nanosleep(&tim, NULL);
+  int max = ceil(log(NUM)/log(4));
+  int current = 0;
+  int buckets[4][NUM];
+  int index[4];
+  unsigned int mask = 3;
+  while((max-current)){
+    index[0] = 0;
+    index[1] = 0;
+    index[2] = 0;
+    index[3] = 0;
+    for(int i = 0;i<NUM;i++){
+      buckets[0][i] = 0;
+      buckets[1][i] = 0;
+      buckets[2][i] = 0;
+      buckets[3][i] = 0;
     }
-    max--;
+    for(int i=0;i<NUM;i++){
+      int aux = (arr[i] & mask) >> (2*current);
+      buckets[aux][index[aux]] = arr[i];
+      index[aux]++;
+    }
+    int helper = 0;
+    for(int i=0;i<4;i++){
+      for(int j=0;j<index[i];j++){
+        sem_wait(&s1);
+        arr[helper] = buckets[i][j];
+        sem_post(&s2);
+        helper++;
+      }
+    }
+    current++;
+    mask = mask << 2;
   }
+
   active = 0;
   sem_post(&s2);
 

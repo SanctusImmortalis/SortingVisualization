@@ -15,7 +15,7 @@ pthread_t t;
 struct timespec tim;
 int active = 1;
 
-void* run(void* arg);
+void* sort(void* arg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 const char* vertexShade = "#version 330 core\nlayout (location = 0) in vec3 aPos;\nvoid main()\n{\n gl_Position = vec4(aPos, 1.0);\n}\0";
@@ -138,7 +138,7 @@ int main(){
 
   glBindVertexArray(0);
 
-  pthread_create(&t, NULL, run, (void*) array);
+  pthread_create(&t, NULL, sort, (void*) array);
 
   while(!glfwWindowShouldClose(window)){
     //processInput(window);
@@ -185,7 +185,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height){
   glViewport(0, 0, width, height);
 }
 
-void* run(void* arg){
+void* sort(void* arg){
   int* arr = (int*) arg;
 
   for(int i=1;i<NUM;i++){
