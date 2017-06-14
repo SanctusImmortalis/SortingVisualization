@@ -188,10 +188,12 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height){
 void* run(void* arg){
   int* arr = (int*) arg;
 
+  int max = NUM - 1;
+
   int swaps = 1;
   while(swaps){
     swaps = 0;
-    for(int i=0;i<(NUM-1);i++){
+    for(int i=0;i<max;i++){
       sem_wait(&s1);
       if(arr[i]>arr[i+1]){
 
@@ -204,6 +206,7 @@ void* run(void* arg){
       sem_post(&s2);
       nanosleep(&tim, NULL);
     }
+    max--;
   }
   active = 0;
   sem_post(&s2);
