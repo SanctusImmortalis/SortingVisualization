@@ -49,7 +49,7 @@ int main(){
   initArray(array);
 
   tim.tv_sec = 0;
-  tim.tv_nsec = 500000;
+  tim.tv_nsec = 200000000;
 
   for(int i = 0;i<(NUM*6);i+=6){
     vertices[i] = ((i/6)*((2.0f)/NUM))-1;
