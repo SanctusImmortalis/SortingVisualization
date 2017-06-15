@@ -35,3 +35,7 @@ Because of its random nature, it's impossible to determine whether or not bogo s
 ## Heap sort
 
 This algorithm organizes the list as a binary max heap, a hierarchical data structure in which the parent nodes are always greater than its children. After the heap has been created, the root element is placed at the end of the unsorted list(as it's guaranteed to be the greatest element), and the remainder of the list is readjusted to form a heap once again. It repeats this process until the list is sorted.
+
+## Cocktail shaker sort
+
+An algorithm similar to bubble sort, that cycles in both directions.
