@@ -206,14 +206,12 @@ void* sort(void* arg){
   }
   total = 0;
   for(int i=0;i<NUM;i++){
+    count[i] = count[i] - total;
     for(int j = count[i];j>=0;j--){
       sem_wait(&s1);
       arr[total] = i + 1;
       total++;
       sem_post(&s2);
-      for(int k=0;k<NUM;k++){
-        count[k]--;
-      }
       nanosleep(&tim, NULL);
     }
   }
