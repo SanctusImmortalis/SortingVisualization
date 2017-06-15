@@ -2,6 +2,14 @@
 
 A miniproject to learn more about sorting algorithms, as well as OpenGL.
 
+## Todo
+
+Organize all of the sorting algorithms into a library
+
+Highlight the elements currently being swapped/compared
+
+Add sound
+
 ## Bubble sort
 
 An algorithm that cycles through the list, comparing pairs of adjacent elements and swapping them if out of order. It stops cycling after a full cycle without swaps.
