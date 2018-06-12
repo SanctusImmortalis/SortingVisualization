@@ -49,14 +49,15 @@ int main(){
   initArray(array);
 
   tim.tv_sec = 0;
-  tim.tv_nsec = 50000000;
+  //tim.tv_nsec = 50000000;
+  tim.tv_nsec = 20;
 
   for(int i = 0;i<(NUM*6);i+=6){
-    vertices[i] = ((i/6)*((2.0f)/NUM))-1;
+    vertices[i] = (((i/6)*((2.0f)/NUM)) - 1) * 0.99f;
     vertices[i+1] = -1;
     vertices[i+2] = 0;
     vertices[i+3] = vertices[i];
-    vertices[i+4] = (array[i/6]*((2.0f)/NUM)) - 1;
+    vertices[i+4] = ((array[i/6]*((2.0f)/NUM)) - 1) * 0.99f;
     vertices[i+5] = 0;
   }
 
@@ -163,7 +164,7 @@ int main(){
       sem_wait(&s2);
 
       for(int i = 0;i<(NUM*6);i+=6){
-        vertices[i+4] = (array[i/6]*((2.0f)/NUM)) - 1;
+        vertices[i+4] = ((array[i/6]*((2.0f)/NUM)) - 1) * 0.99f;
       }
 
       glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -191,7 +192,7 @@ void* sort(void* arg){
 
   for(int i=(NUM-1);i>=0;i--){
     int j = i;
-    while(true){
+    while(1){
       sem_wait(&s1);
       int temp = 0;
       int aux = 2*j + 1;
@@ -237,7 +238,7 @@ void* sort(void* arg){
     sem_post(&s2);
     nanosleep(&tim, NULL);
     int j = 0;
-    while(true){
+    while(1){
       sem_wait(&s1);
       int temp = 0;
       int aux = 2*j + 1;

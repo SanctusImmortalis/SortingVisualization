@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
 
 #include <pthread.h>
 #include <semaphore.h>
@@ -16,6 +15,8 @@ pthread_t t;
 struct timespec tim;
 int active = 1;
 
+void qs(int* arr, int lo, int hi);
+int part(int* arr, int lo, int hi);
 void* sort(void* arg);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -49,7 +50,7 @@ int main(){
   initArray(array);
 
   tim.tv_sec = 0;
-  tim.tv_nsec = 200000000;
+  tim.tv_nsec = 500000;
 
   for(int i = 0;i<(NUM*6);i+=6){
     vertices[i] = (((i/6)*((2.0f)/NUM)) - 1) * 0.99f;
@@ -188,31 +189,41 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height){
 
 void* sort(void* arg){
   int* arr = (int*) arg;
-  int sorted = 0;
-  while(!sorted){
-    sorted = 1;
-    for(int i=0;i<(NUM-1);i++){
-      if(arr[i]>arr[i+1]){
-        sorted = 0;
-        break;
-      }
-    }
-    if(!sorted){
-      sem_wait(&s1);
-      srand(time(NULL));
-      for(int i=0;i<NUM;i++){
-        int r = rand() % NUM;
-        int aux = arr[i];
-        arr[i] = arr[r];
-        arr[r] = aux;
-      }
-      sem_post(&s2);
-      nanosleep(&tim, NULL);
-    }
 
-  }
+  qs(arr, 0, NUM - 1);
 
   active = 0;
   sem_post(&s2);
 
+}
+
+void qs(int* arr, int lo, int hi){
+  if(lo<hi){
+    int p = part(arr, lo, hi);
+    qs(arr, lo, p);
+    qs(arr, p+1, hi);
+  }
+}
+
+int part(int* arr, int lo, int hi){
+  int pivot = arr[lo];
+  int i = lo - 1;
+  int j = hi + 1;
+  int aux;
+  while(1){
+    sem_wait(&s1);
+    do{
+      i++;
+    }while(arr[i] < pivot);
+    do{
+      j--;
+    }while(arr[j] > pivot);
+    sem_post(&s2);
+    if(i>=j) return j;
+
+    aux = arr[i];
+    arr[i] = arr[j];
+    arr[j] = aux;
+    nanosleep(&tim, NULL);
+  }
 }

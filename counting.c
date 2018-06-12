@@ -54,11 +54,11 @@ int main(){
   tim.tv_nsec = 20;
 
   for(int i = 0;i<(NUM*6);i+=6){
-    vertices[i] = ((i/6)*((2.0f)/NUM))-1;
+    vertices[i] = (((i/6)*((2.0f)/NUM)) - 1) * 0.99f;
     vertices[i+1] = -1;
     vertices[i+2] = 0;
     vertices[i+3] = vertices[i];
-    vertices[i+4] = (array[i/6]*((2.0f)/NUM)) - 1;
+    vertices[i+4] = ((array[i/6]*((2.0f)/NUM)) - 1) * 0.99f;
     vertices[i+5] = 0;
   }
 
@@ -165,7 +165,7 @@ int main(){
       sem_wait(&s2);
 
       for(int i = 0;i<(NUM*6);i+=6){
-        vertices[i+4] = (array[i/6]*((2.0f)/NUM)) - 1;
+        vertices[i+4] = ((array[i/6]*((2.0f)/NUM)) - 1) * 0.99f;
       }
 
       glBindBuffer(GL_ARRAY_BUFFER, VBO);
